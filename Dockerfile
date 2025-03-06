@@ -31,7 +31,7 @@ RUN cd /tmp && \
     mv jdk-11.0.2 /usr/local/ && \
     rm -rf /tmp/*
 
-# 安装LibreOffice（优化路径与清理）
+# 安装LibreOffice（优化路径与清理）改路径
 RUN apt-get update && \
     apt-get install -y libxrender1 libxinerama1 libxt6 libxext-dev libfreetype6-dev libcairo2 libcups2 libx11-xcb1 libnss3 && \
     cd /tmp && \
