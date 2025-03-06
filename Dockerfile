@@ -35,9 +35,9 @@ RUN cd /tmp && \
 RUN apt-get update && \
     apt-get install -y libxrender1 libxinerama1 libxt6 libxext-dev libfreetype6-dev libcairo2 libcups2 libx11-xcb1 libnss3 && \
     cd /tmp && \
-    wget --no-check-certificate https://mirrors.cloud.tencent.com/libreoffice/libreoffice/stable/7.6.5/deb/x86_64/LibreOffice_7.6.5_Linux_x86-64_deb.tar.gz && \
-    tar -zxf LibreOffice_7.6.5_Linux_x86-64_deb.tar.gz && \
-    cd LibreOffice_7.6.5.2_Linux_x86-64_deb/DEBS && \
+    wget --no-check-certificate https://downloadarchive.documentfoundation.org/libreoffice/old/7.6.5.1/deb/x86_64/LibreOffice_7.6.5.1_Linux_x86-64_deb.tar.gz && \
+    tar -zxf LibreOffice_7.6.5.1_Linux_x86-64_deb.tar.gz && \
+    cd LibreOffice_7.6.5.1_Linux_x86-64_deb/DEBS && \
     dpkg -i *.deb && \
     rm -rf /tmp/*
 
