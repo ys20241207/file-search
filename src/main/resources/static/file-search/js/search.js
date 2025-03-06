@@ -80,7 +80,7 @@ function searchFile(gotoPage) {
 	}
 	let pageSize = $("#pageSize").val() * 1;
 	$.ajax({
-		url: "/fsearch/api/search",
+		url: "/api/search",
 		type: "GET",
 		data: {
 			text: query,
@@ -102,7 +102,7 @@ function searchFile(gotoPage) {
 
 function startScan() {
 	$.ajax({
-		url: "/fsearch/api/start",
+		url: "/api/start",
 		type: "GET",
 		success: function(response) {
 			const toast = new bootstrap.Toast($("#startTaskToast"))
@@ -117,7 +117,7 @@ function startScan() {
 
 function stopScan() {
 	$.ajax({
-		url: "/fsearch/api/end",
+		url: "/api/end",
 		type: "GET",
 		success: function(response) {
 			const toast = new bootstrap.Toast($("#endTaskToast"))
@@ -131,7 +131,7 @@ function stopScan() {
 
 function getStatus() {
 	$.ajax({
-		url: "/fsearch/api/status",
+		url: "/api/status",
 		type: "GET",
 		success: function(response) {
 			let json = JSON.parse(response);
@@ -191,10 +191,10 @@ function updateResultList(response) {
 			let col = $("<div class='col-md-6'></div>");
 			let card = $("<div class='card'></div>");
 			let win_url = new URL(window.location.href);
-			let downloadurl = new URL("/fsearch/api/download/" + file.doc + "/" + file.name, win_url).toString();
-			let previeUrl = "/fsearch/onlinePreview?officePreviewType=pdf&url=" + base64Encode(downloadurl);
+			let downloadurl = new URL("/api/download/" + file.doc + "/" + file.name, win_url).toString();
+			let previeUrl = "/onlinePreview?officePreviewType=pdf&url=" + base64Encode(downloadurl);
 			if (file.size > 1024 * 1024 * 200) {
-				previeUrl = "/fsearch/file-search/large.html";
+				previeUrl = "/file-search/large.html";
 			}
 			let url = $("<a class='file-url-class' href='' target='_blank'></a>").attr("data", file.doc).attr("durl", downloadurl).attr("href", previeUrl).text(file.name);
 			let downUrl = $("<a class='bi bi-cloud-download-fill' href='' target='_blank'></a>").attr("href", downloadurl);
@@ -253,7 +253,7 @@ function updateResultList(response) {
 			let text = $(event.target).text();
 			$('#fileTitle').text(text);
 			$.ajax({
-				url: "/fsearch/api/get/" + doc,
+				url: "/api/get/" + doc,
 				type: "GET",
 				success: function(response) {
 					var json = JSON.parse(response);
