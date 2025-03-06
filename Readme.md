@@ -1,4 +1,5 @@
-# 基于ayound/file-search更改，移除/fsearch。要是有的话搜索docker镜像：aleoxin/file-search
+# 基于ayound/file-search更改，移除/fsearch。
+# 要使用的话搜索docker镜像：aleoxin/file-search
 
 
 
