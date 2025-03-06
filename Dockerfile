@@ -53,18 +53,36 @@ RUN mkdir -p /fsearch/{cache,files,data}
 # 复制应用程序文件
 COPY target/file-search-1.0.6-SNAPSHOT.jar /fsearch/
 
+ENV USER_NAME admin
+ENV PASSWORD 123456
+ENV KK_BASE_URL default
+ENV JAVA_HOME /usr/local/jdk-11.0.2
+ENV CLASSPATH $JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$JAVA_HOME/bin
+ENV LANG zh_CN.UTF-8
+ENV LC_ALL zh_CN.UTF-8
+ENV KK_FILE_DIR /fsearch/cache
+ENV SCAN_FILE_PATHS /fsearch/files
+ENV DATA_FILE_PATHS /fsearch/data
+VOLUME /fsearch/files
+VOLUME /fsearch/data
+VOLUME /fsearch/cache
+
+
 # 环境变量（使用键值对格式修复LegacyKeyValueFormat警告）‌:ml-citation{ref="6,8" data="citationList"}
-ENV USER_NAME=admin \
-    PASSWORD=123456 \
-    KK_BASE_URL=default \
-    JAVA_HOME=/usr/local/jdk-11.0.2 \
-    PATH="$JAVA_HOME/bin:$PATH" \
-    LANG=zh_CN.UTF-8 \
-    LC_ALL=zh_CN.UTF-8
+#ENV USER_NAME=admin \
+#    PASSWORD=123456 \
+#    KK_BASE_URL=default \
+#    JAVA_HOME=/usr/local/jdk-11.0.2 \
+#    PATH="$JAVA_HOME/bin:$PATH" \
+#    LANG=zh_CN.UTF-8 \
+#    LC_ALL=zh_CN.UTF-8
 
 # 声明数据卷与端口‌:ml-citation{ref="3,7" data="citationList"}
-VOLUME ["/fsearch/files", "/fsearch/data", "/fsearch/cache"]
+#VOLUME ["/fsearch/files", "/fsearch/data", "/fsearch/cache"]
 EXPOSE 8012
 
 # 启动命令
 ENTRYPOINT ["java", "-jar", "/fsearch/file-search-1.0.6-SNAPSHOT.jar"]
+
+CMD ["/bin/bash"]
