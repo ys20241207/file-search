@@ -1,3 +1,8 @@
+# 基于ayound/file-search更改，移除/fsearch。要是有的话搜索docker镜像：aleoxin/file-search
+
+
+
+
 # 说明
 
 我有大量的文档需要全文检索，放在nas上，找遍了软件没有找到合适的，譬如某些软件用pg或Mysql存储文档内容，文档数量上几万的时候，在nas的机器上全文检索就没法打开。
