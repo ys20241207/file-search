@@ -17,6 +17,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 						.usernameParameter("username") // 定义从Form中获取用户名的key 与html中的form参数匹配
 						.passwordParameter("password") // 定义从Form中获取密码的key 与html中的form参数匹配
 						.loginProcessingUrl("/my/login") // 认证发起的URL，访问该URL则认证凭证 这样要与HTML中form的提交地址一致
+						.defaultSuccessUrl("/")
 						.failureHandler(new MyAuthenticationFailureHandler("/fail")))
 				// 禁用httpBasic
 				.httpBasic((httpBasic) -> httpBasic.disable())
