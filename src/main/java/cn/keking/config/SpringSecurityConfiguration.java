@@ -13,7 +13,8 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    http.authorizeRequests().antMatchers("/login/**").permitAll().antMatchers("/fail/**")
+    http.authorizeRequests().antMatchers("/").permitAll().antMatchers("/login/**").permitAll()
+        .antMatchers("/fail/**")
         .permitAll().antMatchers("/api/download/**").permitAll().anyRequest()
         .authenticated().and().formLogin((formLogin) -> formLogin.loginPage("/login") // 自定义登录页面路径
         .usernameParameter("username") // 定义从Form中获取用户名的key 与html中的form参数匹配
