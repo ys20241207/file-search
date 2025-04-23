@@ -3,60 +3,73 @@ package org.ayound.nas.file.search;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.Tokenizer;
+import org.apache.lucene.analysis.ngram.NGramTokenizer;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.NIOFSDirectory;
 import org.springframework.stereotype.Component;
+import javax.annotation.PreDestroy;
 
 @Component
 public class IndexService {
-	// 索引服务实例
-	private static IndexService instance;
-	Directory indexDirectory;
+    // 保持原有单例模式（与Spring @Component共存）
+    private static IndexService instance;
+    private Directory indexDirectory;
+    private Analyzer analyzer;
 
-	IndexWriter indexWriter;
+    // 私有构造函数
+    private IndexService() throws IOException {
+        this.analyzer = new NGramAnalyzer(); // 替换为N-Gram分词器
+        Path indexPath = Paths.get(Configuration.getIndexFilePath());
+        this.indexDirectory = new NIOFSDirectory(indexPath);
+    }
 
-	Analyzer analyzer;
+    // 自定义N-Gram分词器（内置类）
+    private static class NGramAnalyzer extends Analyzer {
+        @Override
+        protected TokenStreamComponents createComponents(String fieldName) {
+            Tokenizer tokenizer = new NGramTokenizer(1, 2); // 1-2 gram
+            return new TokenStreamComponents(tokenizer);
+        }
+    }
 
-	// 私有构造函数，防止外部实例化
-	private IndexService() throws IOException {
-		analyzer = new StandardAnalyzer();
-		Path indexPath = Paths.get(Configuration.getIndexFilePath());
-		indexDirectory = new NIOFSDirectory(indexPath);
-		
-	}
+    // 单例获取方法（保持原有）
+    public static synchronized IndexService getInstance() throws IOException {
+        if (instance == null) {
+            instance = new IndexService();
+        }
+        return instance;
+    }
 
-	// 获取索引服务单例对象
-	public static IndexService getInstance() throws IOException {
-		if (instance == null) {
-			instance = new IndexService();
-		}
-		return instance;
-	}
+    // 更新索引路径（保持原有方法签名）
+    public void update() throws IOException {
+        Path indexPath = Paths.get(Configuration.getIndexFilePath());
+        this.indexDirectory = new NIOFSDirectory(indexPath);
+        this.analyzer = new NGramAnalyzer(); // 重新初始化N-Gram
+    }
 
-	public void update() throws IOException {
-		Path indexPath = Paths.get(Configuration.getIndexFilePath());
-		indexDirectory = new NIOFSDirectory(indexPath);
-		analyzer = new StandardAnalyzer();
-	}
+    // 其余方法完全保持不变
+    @PreDestroy
+    public void cleanup() throws IOException {
+        if (analyzer != null) analyzer.close();
+        if (indexDirectory != null) indexDirectory.close();
+    }
 
-	public Directory getIndexDirectory() throws IOException {
-		Path indexPath = Paths.get(Configuration.getIndexFilePath());
-		return new NIOFSDirectory(indexPath);
-	}
+    public Directory getIndexDirectory() throws IOException {
+        Path indexPath = Paths.get(Configuration.getIndexFilePath());
+        return new NIOFSDirectory(indexPath);
+    }
 
-	public Analyzer getAnalyzer() {
-		return analyzer;
-	}
+    public Analyzer getAnalyzer() {
+        return analyzer;
+    }
 
-	public IndexWriter newIndexWriter() throws IOException {
-		IndexWriterConfig indexerConfig = new IndexWriterConfig(analyzer);
-		indexerConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-		return new IndexWriter(indexDirectory, indexerConfig);
-	}
-
+    public IndexWriter newIndexWriter() throws IOException {
+        IndexWriterConfig config = new IndexWriterConfig(analyzer);
+        config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+        return new IndexWriter(indexDirectory, config);
+    }
 }
