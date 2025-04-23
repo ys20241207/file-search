@@ -1,17 +1,14 @@
-# This workflow will build a package using Maven and then publish it to GitHub packages when a release is created
-# For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#apache-maven-with-a-settings-path
-
-name: Maven Package
+name: Maven Package and Publish Artifact
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:  # 手动触发
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -19,14 +16,31 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    
     - name: Set up JDK 11
       uses: actions/setup-java@v3
       with:
         java-version: '11'
         distribution: 'temurin'
-        server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-        settings-path: ${{ github.workspace }} # location for the settings.xml file
-
-    - name: Build with Maven
-      run: mvn -B package -Dmaven.test.skip=true --file pom.xml
-
+        server-id: github
+        settings-path: ${{ github.workspace }}
+    
+    - name: Cache Maven dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+    
+    - name: Build with Maven (Skip Tests)
+      run: mvn -B clean package -Dmaven.test.skip=true
+      
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-artifact
+        path: |
+          target/*.jar
+          target/*.war
+        retention-days: 7
