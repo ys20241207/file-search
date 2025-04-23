@@ -24,7 +24,7 @@ public class IndexService {
 
 	// 私有构造函数，防止外部实例化
 	private IndexService() throws IOException {
-		analyzer = new SmartChineseAnalyzer();
+		analyzer = new StandardAnalyzer();
 		Path indexPath = Paths.get(Configuration.getIndexFilePath());
 		indexDirectory = new NIOFSDirectory(indexPath);
 		
@@ -41,7 +41,7 @@ public class IndexService {
 	public void update() throws IOException {
 		Path indexPath = Paths.get(Configuration.getIndexFilePath());
 		indexDirectory = new NIOFSDirectory(indexPath);
-		analyzer = new SmartChineseAnalyzer();
+		analyzer = new StandardAnalyzer();
 	}
 
 	public Directory getIndexDirectory() throws IOException {
