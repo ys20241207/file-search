@@ -277,11 +277,11 @@ public class Searcher {
 			obj.put("time", document.get("time"));
 			obj.put("size", document.get("size"));
 			String content = document.get("content");
-			if(content!=null) {
-				if(content.length()>10000) {
-					content = StringUtils.substring(content, 0, 10000);
-				}
-			}
+			//if(content!=null) {
+				//if(content.length()>10000) {
+					//content = StringUtils.substring(content, 0, 10000);
+				//}
+			//}
 			obj.put("content", content);
 			obj.put("type", document.get("type"));
 			ret.put("data", obj);
